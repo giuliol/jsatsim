@@ -7,12 +7,16 @@ public class Orbits {
 	public static final int ORBIT_TYPE_MEO=2;
 	public static final int ORBIT_TYPE_HEO=3;
 	
+	private static final int LEO_DELAY_MS=12;
+	private static final int HEO_DELAY_MS=240;
+	private static final int GEO_DELAY_MS=260;
+	private static final int MEO_DELAY_MS=120;
 
 	
-	private static final String LEO_HRNAME="LEO orbit (36k km)";
-	private static final String GEO_HRNAME="GEO orbit (??k km)";
-	private static final String MEO_HRNAME="MEO orbit (??k km)";
-	private static final String HEO_HRNAME="HEO orbit (??k km)";
+	private static final String LEO_HRNAME="LEO orbit (1.000 km)";
+	private static final String GEO_HRNAME="GEO orbit (35.786 km)";
+	private static final String MEO_HRNAME="MEO orbit (10.000 km)";
+	private static final String HEO_HRNAME="HEO orbit (20.000 km)";
 
 	
 	/**

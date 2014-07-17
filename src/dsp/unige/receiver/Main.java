@@ -1,23 +1,20 @@
 package dsp.unige.receiver;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.net.DatagramSocket;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JEditorPane;
 
 public class Main extends JFrame {
 
@@ -29,6 +26,9 @@ public class Main extends JFrame {
 
 	public Main(){
 		initUI();
+		
+		ChannelHelper.Station s=new ChannelHelper.Station(55.68 , 30 , 25 , 4.94 , 11);
+		ChannelHelper.getAttenuation(s);
 	}
 
 
