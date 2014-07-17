@@ -46,6 +46,7 @@ public class ChannelHelper {
 		
 		// ====================  step 4  ===========================
 		// obtain rain attenuation 
+		// TODO : controllare le reference 9 e 31 per capire bene cosa sono K e alpha
 		double gamma = s.RAIN_K*Math.pow(s.R001,s.RAIN_ALPHA);
 		
 		// ====================  step 5  ===========================
