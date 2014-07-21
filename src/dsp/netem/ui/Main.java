@@ -425,7 +425,6 @@ public class Main extends JFrame {
 		txtrDatamisc.setEditable(false);
 		txtrDatamisc.setText("please apply settings to continue..");
 		GridBagConstraints gbc_txtrDatamisc = new GridBagConstraints();
-		gbc_txtrDatamisc.insets = new Insets(0, 0, 5, 0);
 		gbc_txtrDatamisc.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtrDatamisc.gridx = 1;
 		gbc_txtrDatamisc.gridy = 5;
@@ -514,7 +513,7 @@ public class Main extends JFrame {
 	private void setMiscData(Satellite sat, Station sta, int rate, double ber) {
 		String st = "Freespace Loss = "+ChannelHelper.getFreeSpaceLoss(sta, sat)+" dB\nRain Attenuation = "+ChannelHelper.getRainAttenuation(sta)+" dB";
 		st += "\nSNR = "+(ChannelHelper.getSdB(sta, sat) - ChannelHelper.getNoisePower(sta, sat)) +" dB";
-		st += "\n"+rate+" bps, "+String.format("%6.2f",ber*100)+" BER";
+		st += "\n    "+rate+" bps, "+String.format("%6.2f",ber*100)+"% BER";
 		txtrDatamisc.setText(st);
 	}
 
