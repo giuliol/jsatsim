@@ -425,6 +425,7 @@ public class Main extends JFrame {
 		txtrDatamisc.setEditable(false);
 		txtrDatamisc.setText("please apply settings to continue..");
 		GridBagConstraints gbc_txtrDatamisc = new GridBagConstraints();
+		gbc_txtrDatamisc.insets = new Insets(0, 0, 5, 0);
 		gbc_txtrDatamisc.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtrDatamisc.gridx = 1;
 		gbc_txtrDatamisc.gridy = 5;
@@ -444,7 +445,6 @@ public class Main extends JFrame {
 		txtrNetemoutput.setLineWrap(true);
 		txtrNetemoutput.setEditable(false);
 		txtrNetemoutput.setWrapStyleWord(true);
-		txtrNetemoutput.setText("netem_output");
 		
 		Component verticalStrut_6 = Box.createVerticalStrut(20);
 		GridBagConstraints gbc_verticalStrut_6 = new GridBagConstraints();
