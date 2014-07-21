@@ -368,9 +368,9 @@ public class Main extends JFrame {
 		frmSatelliteEmulator.getContentPane().add(status_panel, BorderLayout.SOUTH);
 		GridBagLayout gbl_status_panel = new GridBagLayout();
 		gbl_status_panel.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_status_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_status_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_status_panel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_status_panel.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_status_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		status_panel.setLayout(gbl_status_panel);
 		
 		Component verticalStrut_2 = Box.createVerticalStrut(20);
@@ -393,20 +393,27 @@ public class Main extends JFrame {
 		gbc_btnSet.gridy = 1;
 		status_panel.add(btnSet, gbc_btnSet);
 		
-		txtrDatamisc = new JTextArea();
+		Component verticalStrut_7 = Box.createVerticalStrut(20);
+		GridBagConstraints gbc_verticalStrut_7 = new GridBagConstraints();
+		gbc_verticalStrut_7.insets = new Insets(0, 0, 5, 5);
+		gbc_verticalStrut_7.gridx = 1;
+		gbc_verticalStrut_7.gridy = 2;
+		status_panel.add(verticalStrut_7, gbc_verticalStrut_7);
+		
+		txtrDatamisc = new JTextArea(4,10);
 		txtrDatamisc.setTabSize(5);
 		txtrDatamisc.setWrapStyleWord(true);
 		txtrDatamisc.setEditable(false);
-		txtrDatamisc.setText("DATA_MISC");
+		txtrDatamisc.setText("please apply settings to continue..");
 		GridBagConstraints gbc_txtrDatamisc = new GridBagConstraints();
 		gbc_txtrDatamisc.insets = new Insets(0, 0, 5, 5);
 		gbc_txtrDatamisc.fill = GridBagConstraints.BOTH;
 		gbc_txtrDatamisc.gridx = 1;
-		gbc_txtrDatamisc.gridy = 2;
+		gbc_txtrDatamisc.gridy = 3;
 		status_panel.add(txtrDatamisc, gbc_txtrDatamisc);
 		
 		
-		txtrNetemoutput = new JTextArea();
+		txtrNetemoutput = new JTextArea(8,10);
 		txtrNetemoutput.setEnabled(false);
 		txtrNetemoutput.setEditable(false);
 		txtrNetemoutput.setWrapStyleWord(true);
@@ -415,21 +422,21 @@ public class Main extends JFrame {
 		gbc_txtrNetemoutput.insets = new Insets(0, 0, 5, 5);
 		gbc_txtrNetemoutput.fill = GridBagConstraints.BOTH;
 		gbc_txtrNetemoutput.gridx = 1;
-		gbc_txtrNetemoutput.gridy = 8;
+		gbc_txtrNetemoutput.gridy = 9;
 		status_panel.add(txtrNetemoutput, gbc_txtrNetemoutput);
 		
 		Component horizontalStrut_3 = Box.createHorizontalStrut(20);
 		GridBagConstraints gbc_horizontalStrut_3 = new GridBagConstraints();
 		gbc_horizontalStrut_3.insets = new Insets(0, 0, 5, 5);
 		gbc_horizontalStrut_3.gridx = 0;
-		gbc_horizontalStrut_3.gridy = 9;
+		gbc_horizontalStrut_3.gridy = 10;
 		status_panel.add(horizontalStrut_3, gbc_horizontalStrut_3);
 		
 		Component verticalStrut_6 = Box.createVerticalStrut(20);
 		GridBagConstraints gbc_verticalStrut_6 = new GridBagConstraints();
 		gbc_verticalStrut_6.insets = new Insets(0, 0, 0, 5);
 		gbc_verticalStrut_6.gridx = 1;
-		gbc_verticalStrut_6.gridy = 10;
+		gbc_verticalStrut_6.gridy = 11;
 		status_panel.add(verticalStrut_6, gbc_verticalStrut_6);
 		
 		frmSatelliteEmulator.pack();
