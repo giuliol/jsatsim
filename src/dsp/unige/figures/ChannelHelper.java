@@ -1,5 +1,7 @@
 package dsp.unige.figures;
 
+import java.io.Serializable;
+
 
 /**
  * @author giulio
@@ -114,7 +116,7 @@ public class ChannelHelper {
 		
 	}
 
-	public static class Station {
+	public static class Station implements Serializable {
 
 		public double stationLatitude;
 		public double stationAltitude;

@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
@@ -30,8 +31,11 @@ import dsp.unige.figures.ChannelHelper.Station;
 import dsp.unige.figures.Modulation;
 import dsp.unige.figures.Orbits;
 import dsp.unige.figures.SimConstants;
+
 import javax.swing.JTextArea;
 import javax.swing.JSeparator;
+import javax.swing.DropMode;
+import javax.swing.JScrollPane;
 
 public class Main extends JFrame {
 
@@ -368,14 +372,14 @@ public class Main extends JFrame {
 		frmSatelliteEmulator.getContentPane().add(status_panel, BorderLayout.SOUTH);
 		GridBagLayout gbl_status_panel = new GridBagLayout();
 		gbl_status_panel.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_status_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_status_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_status_panel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_status_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_status_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		status_panel.setLayout(gbl_status_panel);
 		
 		Component verticalStrut_2 = Box.createVerticalStrut(20);
 		GridBagConstraints gbc_verticalStrut_2 = new GridBagConstraints();
-		gbc_verticalStrut_2.insets = new Insets(0, 0, 5, 5);
+		gbc_verticalStrut_2.insets = new Insets(0, 0, 5, 0);
 		gbc_verticalStrut_2.gridx = 1;
 		gbc_verticalStrut_2.gridy = 0;
 		status_panel.add(verticalStrut_2, gbc_verticalStrut_2);
@@ -388,55 +392,65 @@ public class Main extends JFrame {
 		});
 		
 		GridBagConstraints gbc_btnSet = new GridBagConstraints();
-		gbc_btnSet.insets = new Insets(0, 0, 5, 5);
+		gbc_btnSet.insets = new Insets(0, 0, 5, 0);
 		gbc_btnSet.gridx = 1;
 		gbc_btnSet.gridy = 1;
 		status_panel.add(btnSet, gbc_btnSet);
 		
+		Component horizontalStrut_3 = Box.createHorizontalStrut(20);
+		GridBagConstraints gbc_horizontalStrut_3 = new GridBagConstraints();
+		gbc_horizontalStrut_3.insets = new Insets(0, 0, 5, 0);
+		gbc_horizontalStrut_3.gridx = 3;
+		gbc_horizontalStrut_3.gridy = 3;
+		status_panel.add(horizontalStrut_3, gbc_horizontalStrut_3);
+		
+		Component horizontalStrut_4 = Box.createHorizontalStrut(20);
+		GridBagConstraints gbc_horizontalStrut_4 = new GridBagConstraints();
+		gbc_horizontalStrut_4.insets = new Insets(0, 0, 5, 0);
+		gbc_horizontalStrut_4.gridx = 0;
+		gbc_horizontalStrut_4.gridy = 4;
+		status_panel.add(horizontalStrut_4, gbc_horizontalStrut_4);
+		
 		Component verticalStrut_7 = Box.createVerticalStrut(20);
 		GridBagConstraints gbc_verticalStrut_7 = new GridBagConstraints();
-		gbc_verticalStrut_7.insets = new Insets(0, 0, 5, 5);
+		gbc_verticalStrut_7.insets = new Insets(0, 0, 5, 0);
 		gbc_verticalStrut_7.gridx = 1;
-		gbc_verticalStrut_7.gridy = 2;
+		gbc_verticalStrut_7.gridy = 4;
 		status_panel.add(verticalStrut_7, gbc_verticalStrut_7);
 		
 		txtrDatamisc = new JTextArea(4,10);
+		txtrDatamisc.setFont(new Font("DejaVu Sans", Font.PLAIN, 14));
 		txtrDatamisc.setTabSize(5);
 		txtrDatamisc.setWrapStyleWord(true);
 		txtrDatamisc.setEditable(false);
 		txtrDatamisc.setText("please apply settings to continue..");
 		GridBagConstraints gbc_txtrDatamisc = new GridBagConstraints();
-		gbc_txtrDatamisc.insets = new Insets(0, 0, 5, 5);
-		gbc_txtrDatamisc.fill = GridBagConstraints.BOTH;
+		gbc_txtrDatamisc.insets = new Insets(0, 0, 5, 0);
+		gbc_txtrDatamisc.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtrDatamisc.gridx = 1;
-		gbc_txtrDatamisc.gridy = 3;
+		gbc_txtrDatamisc.gridy = 5;
 		status_panel.add(txtrDatamisc, gbc_txtrDatamisc);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+		gbc_scrollPane.gridx = 1;
+		gbc_scrollPane.gridy = 6;
+		status_panel.add(scrollPane, gbc_scrollPane);
 		
 		
 		txtrNetemoutput = new JTextArea(8,10);
-		txtrNetemoutput.setEnabled(false);
+		scrollPane.setViewportView(txtrNetemoutput);
+		txtrNetemoutput.setLineWrap(true);
 		txtrNetemoutput.setEditable(false);
 		txtrNetemoutput.setWrapStyleWord(true);
 		txtrNetemoutput.setText("netem_output");
-		GridBagConstraints gbc_txtrNetemoutput = new GridBagConstraints();
-		gbc_txtrNetemoutput.insets = new Insets(0, 0, 5, 5);
-		gbc_txtrNetemoutput.fill = GridBagConstraints.BOTH;
-		gbc_txtrNetemoutput.gridx = 1;
-		gbc_txtrNetemoutput.gridy = 9;
-		status_panel.add(txtrNetemoutput, gbc_txtrNetemoutput);
-		
-		Component horizontalStrut_3 = Box.createHorizontalStrut(20);
-		GridBagConstraints gbc_horizontalStrut_3 = new GridBagConstraints();
-		gbc_horizontalStrut_3.insets = new Insets(0, 0, 5, 5);
-		gbc_horizontalStrut_3.gridx = 0;
-		gbc_horizontalStrut_3.gridy = 10;
-		status_panel.add(horizontalStrut_3, gbc_horizontalStrut_3);
 		
 		Component verticalStrut_6 = Box.createVerticalStrut(20);
 		GridBagConstraints gbc_verticalStrut_6 = new GridBagConstraints();
-		gbc_verticalStrut_6.insets = new Insets(0, 0, 0, 5);
 		gbc_verticalStrut_6.gridx = 1;
-		gbc_verticalStrut_6.gridy = 11;
+		gbc_verticalStrut_6.gridy = 7;
 		status_panel.add(verticalStrut_6, gbc_verticalStrut_6);
 		
 		frmSatelliteEmulator.pack();
@@ -446,6 +460,37 @@ public class Main extends JFrame {
 		
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
+		JMenuItem saveConf = new JMenuItem("Save configuration...");
+		JMenuItem exit = new JMenuItem("Exit");
+		exit.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		
+		saveConf.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Station sta = parseStationParameters();
+				Satellite sat = parseSatelliteParameters();
+				
+			}
+		});
+		JMenuItem loadConf = new JMenuItem("Load configuration...");
+
+		mnFile.add(saveConf);
+		mnFile.add(loadConf);
+		mnFile.add(exit);
+		
+		
+		JMenu mnHelp = new JMenu("?");
+		JMenuItem about = new JMenuItem("About..."); 
+		menuBar.add(mnHelp);
+		mnHelp.add(about);
+		
 		frmSatelliteEmulator.setVisible (true);
 
 	}
@@ -458,7 +503,7 @@ public class Main extends JFrame {
 		double ber = ChannelHelper.getBER(sta, sat);
 		
 		NETEMctrl c=new NETEMctrl("FUFFA");  // TODO leva
-		StringBuffer sb=c.setNetworkConditions(""+rate, String.format("%6.2f",ber), 0+"", Orbits.getDelay(sat.ORBIT_TYPE) +"") ;
+		StringBuffer sb=c.setNetworkConditions(""+String.format("%6.4f",rate/1000d), String.format("%6.2f",ber), 0+"", Orbits.getDelay(sat.ORBIT_TYPE) +"") ;
 		
 		setMiscData(sat, sta, rate,ber);
 		txtrNetemoutput.append("\n"+sb.toString());
@@ -467,7 +512,7 @@ public class Main extends JFrame {
 
 
 	private void setMiscData(Satellite sat, Station sta, int rate, double ber) {
-		String st = "Freespace Loss: "+ChannelHelper.getFreeSpaceLoss(sta, sat)+"dB\nRain Attenuation "+ChannelHelper.getRainAttenuation(sta)+" dB";
+		String st = "Freespace Loss = "+ChannelHelper.getFreeSpaceLoss(sta, sat)+" dB\nRain Attenuation = "+ChannelHelper.getRainAttenuation(sta)+" dB";
 		st += "\nSNR = "+(ChannelHelper.getSdB(sta, sat) - ChannelHelper.getNoisePower(sta, sat)) +" dB";
 		st += "\n"+rate+" bps, "+String.format("%6.2f",ber*100)+" BER";
 		txtrDatamisc.setText(st);

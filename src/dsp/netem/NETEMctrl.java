@@ -64,9 +64,9 @@ public class NETEMctrl {
 	public StringBuffer setNetworkConditions(String rate, String ber, String loss, String delay){
 		Process p,p2;
 		  try {
-//			 System.out.println("setnetcondition: eseguo");
-//			 System.out.println("tc qdisc change dev "+netInterface+" root netem rate "+rate+"kbit loss "+loss+"% corrupt "+ber+"% delay "+delay+"ms");
-//			 System.out.println("\n");
+			 System.out.println("setnetcondition: eseguo");
+			 System.out.println("tc qdisc change dev "+netInterface+" root netem rate "+rate+"kbit loss "+loss+"% corrupt "+ber+"% delay "+delay+"ms");
+			 System.out.println("\n");
 
 
 			p = Runtime.getRuntime().exec("tc qdisc change dev "+netInterface+" root netem rate "+rate+"kbit loss "+loss+"% corrupt "+ber+"% delay "+delay+"ms");
