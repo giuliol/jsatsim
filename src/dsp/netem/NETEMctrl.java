@@ -60,7 +60,9 @@ public class NETEMctrl {
 		}
 	}
 	
-	
+	public String getNICname(){
+		return netInterface;
+	}
 	public StringBuffer setNetworkConditions(String rate, String ber, String loss, String delay){
 		Process p,p2;
 		  try {
@@ -107,5 +109,18 @@ public class NETEMctrl {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void reset() {
+		// TODO Auto-generated method stub
+		try {
+			Runtime.getRuntime().exec("tc qdisc del dev "+netInterface+" root netem");
+			Runtime.getRuntime().exec("tc qdisc add dev "+netInterface+" root netem");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

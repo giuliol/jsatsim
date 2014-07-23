@@ -2,6 +2,11 @@ package dsp.unige.figures;
 
 import java.io.Serializable;
 
+import org.apache.commons.math3.special.Erf;
+
+import dsp.unige.figures.ChannelHelper.Satellite;
+import dsp.unige.figures.ChannelHelper.Station;
+
 
 /**
  * @author giulio
@@ -11,16 +16,16 @@ public class ChannelHelper {
 
 
 	
-	/** Returns the noise level of a system given the bandwidth (in Hz) and the system temperature (kelvin degrees)
+	/** Returns the noise density of a system given Satellite and Station
 	 * 
-	 * @param noiseTemperature 
-	 * @param bandwidthHz
-	 * @return the noise level in dB
+	 * @param station 
+	 * @param satellite
+	 * @return the noise power density in dBW/Hz
 	 */
-	public static double getNoisePower(Station sta, Satellite sat){
+	public static double getN0(Station sta, Satellite sat){
 		
-		
-		return -228.6 + 10*Math.log10(sta.noiseTemperature) +10*Math.log10(sat.transponderBandwidth);
+		double Te = sta.antennaNoiseTemperature + sta.amplifierNoiseTemperature + sta.getRainNoiseTemperature(); 
+		return -228.6 + 10*Math.log10(Te);
 	}
 	
 	/**
@@ -31,8 +36,8 @@ public class ChannelHelper {
 	 * @return Shannon max. theoretical bandwidth in bps.
 	 */
 	static double getHSCapacity(int B, double s, double n){
-		System.out.println("ChannelHelper.getHSCapacity() debug; "+(1+ Math.pow(10,s/10d) / Math.pow(10,n/10d)));
-		return B*Math.log(1+ Math.pow(10,s/10d) / Math.pow(10,n/10d))/Math.log(2); 
+		System.out.println("ChannelHelper.getHSCapacity() B="+B+" kHz");
+		return B*Math.log(1+ Math.pow(10,(s-n)/10))/Math.log(2) * 1000;  // kHz to Hz
 	}
 
 
@@ -46,7 +51,7 @@ public class ChannelHelper {
 	public static double getRainAttenuation(Station s){
 
 		// ====================  step 1  ===========================
-		// calculate freezing height (in km) from the absolute alue of station latitude
+		// calculate freezing height (in km) from the absolute value of station latitude
 		double hFr;
 		if(s.stationLatitude >= 0  && s.stationLatitude <23)
 			hFr = 5.0d;
@@ -112,22 +117,36 @@ public class ChannelHelper {
 	 */
 	public static double getFreeSpaceLoss(Station station, Satellite satellite){
 		
-		return 20*Math.log10(Orbits.getDistance(satellite.ORBIT_TYPE)) + 20*Math.log10(station.frequency*1000) + 32.45;
+		return 20*Math.log10(Orbits.getDistance(satellite.ORBIT_TYPE)) + 20*Math.log10(station.frequency) + 92.44;
 		
 	}
 
 	public static class Station implements Serializable {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		private static final double APERTURE_EFFICIENCY = 0.55d;
 		public double stationLatitude;
 		public double stationAltitude;
 		public double elevationAngle;
 		public double frequency;
 		public double R001;
 		public double tilt=45;
-		public int noiseTemperature;
+		public int antennaNoiseTemperature;
+		public int amplifierNoiseTemperature;
+		public double antennaDiameter;
 		
 		private int fIdx;
 
+		/** 
+		 * @return The noise temperature due to rain fall (in °K) 
+		 */
+		public double getRainNoiseTemperature(){
+			return 275d * (1d-Math.pow(10, -getRainAttenuation(this)/10d));
+		}
 
 		/**
 		 * @param sL station latitude in degrees
@@ -135,24 +154,29 @@ public class ChannelHelper {
 		 * @param r001 point rainfall rate for 0.01% of an avg. year in mm/hr
 		 * @param eA station elevation angle in degrees
 		 * @param f carrier frequency in GHz
+		 * @param antennaNoiseTemp antenna equivalent noise temperature 
+		 * @param amplifierNoiseTemp active circuitry equivalent noise temperature (state of art NASA equipm. ~30°K, typical eq. ~ 100 - 500 °K
 		 */
-		public Station(double sL, double sA, double r001, double eA, double f, int noiseTemp){
+		public Station(double sL, double sA, double r001, double eA, double f, int antennaNoiseTemp, int amplifierNoiseTemp, double antennaDiamet){
 			stationLatitude=sL;
 			stationAltitude=sA;
 			R001=r001;
 			elevationAngle=eA;
 			frequency=f;
 			fIdx=getFIndex(frequency);
-			noiseTemperature=noiseTemp;
-		}
+			antennaNoiseTemperature=antennaNoiseTemp;
+			amplifierNoiseTemperature= amplifierNoiseTemp;
+			antennaDiameter=antennaDiamet;
+			}
 
+		public double getAntennaGain(){
+			return 10*Math.log10(109.66*frequency*frequency*antennaDiameter*antennaDiameter*APERTURE_EFFICIENCY);
+		}
 		private double getRainK() {
-			System.out.println("ChannelHelper.Station.getRainK()  N.B. circular polarization assumed!" );
 			return (KH[fIdx]+KV[fIdx])/2;
 		}
 
 		private double getRainAlpha() {
-			System.out.println("ChannelHelper.Station.getRainAlpha() N.B. circular polarization assumed!");
 			return (KH[fIdx]*ALPHAH[fIdx] + KV[fIdx]* ALPHAV[fIdx])/ (2*getRainK());
 		}
 
@@ -172,7 +196,6 @@ public class ChannelHelper {
 			else 
 				out= idx-1;
 			
-			System.out.println("ChannelHelper.Station.getFIndex() closest freq. F["+out+"] ="+F[out]);
 			return out;
 		}
 
@@ -296,9 +319,13 @@ public class ChannelHelper {
 			90,
 			100
 		};
+
+		public double getFigureofMerit() {
+			return getAntennaGain()-10*Math.log10(antennaNoiseTemperature + amplifierNoiseTemperature + getRainNoiseTemperature() );
+		}
 	}
 
-	public static class Satellite{
+	public static class Satellite implements Serializable{
 		public Satellite(double eIRP2, int transpBW, int orbType,
 				int modul) {
 			
@@ -309,12 +336,8 @@ public class ChannelHelper {
 			
 		}
 		
-		public double getBER(double snr){
-			System.out.println("ChannelHelper.Satellite.getERF() TBI");
-			if(modulation == Modulation.BPSK)
-				return 0;
-			else 
-				return 0;
+		public double getBER(double ebn0, int MODULATION_TYPE){
+			return Modulation.getBER(ebn0,MODULATION_TYPE);
 		}
 		
 		public int txPower;
@@ -324,23 +347,61 @@ public class ChannelHelper {
 		public int modulation;
 	}
 
-	public static double getSdB(Station sta, Satellite sat){
-		return  sat.EIRP - getFreeSpaceLoss(sta, sat) - getRainAttenuation(sta);
+	public static double getSdBW(Station sta, Satellite sat){
+		System.out.println("ChannelHelper.getSdB() Antenna gain= "+sta.getAntennaGain() +" dBi");
+		return  sat.EIRP - getFreeSpaceLoss(sta, sat) - getRainAttenuation(sta) + sta.getFigureofMerit();
 	}
 	
 	public static int getRate(Station sta, Satellite sat) {
 		
-		double s = getSdB(sta,sat);
-		double n = getNoisePower(sta, sat);
+		double s = getSdBW(sta,sat);
+		double n = getNdBW(sta, sat);
 		double bw = getHSCapacity(sat.transponderBandwidth, s , n);
 		return (int) bw;
 	}
 
+	public static double getNdBW(Station sta, Satellite sat) {
+		
+		return getN0(sta, sat)+10*Math.log10(sat.transponderBandwidth)+30; // KHz to Hz
+	}
+
 	public static double getBER(Station sta, Satellite sat) {
 		double s = sat.EIRP - getFreeSpaceLoss(sta, sat) - getRainAttenuation(sta);
-		double n = getNoisePower(sta,sat);
-		return	sat.getBER(s-n);
+		System.out.println("ChannelHelper.getBER() s[dBW]="+s);
+		System.out.println("ChannelHelper.getBER() sta.frequ "+sat.transponderBandwidth +" kHz");
+		double n = getNdBW(sta, sat);
+		System.out.println("ChannelHelper.getBER() n0[dBW/Hz]="+getN0(sta, sat)+", n[dBW] = "+n);
+		
+		// FIXME casino!!
+		double eb = Math.pow(10,s/10d) / getHSCapacity(sat.transponderBandwidth, s, n);
+		double n0 = Math.pow(10, getN0(sta, sat)/10d);
+		
+		
+		
+		System.out.println("ChannelHelper.getBER() snr [dB]="+(s-n));
+		System.out.println("ChannelHelper.getBER() snr ="+Math.pow(10, (s-n)/10d));
+		System.out.println("ChannelHelper.getBER() Rb="+getHSCapacity(sat.transponderBandwidth, s, n) );
+		System.out.println("ChannelHelper.getBER() eb/n0 [dB] = "+(10*Math.log10(eb/n0)) );
+		System.out.println("ChannelHelper.getBER() BER: "+ 0.5*Erf.erfc(Math.sqrt(eb/n0)));
+		return	sat.getBER(0,sat.modulation);
 
 	}
+
+	public static double getBER(Station sta, Satellite sat, double d) {
+		
+		double s = sat.EIRP - getFreeSpaceLoss(sta, sat) - getRainAttenuation(sta);
+		double n = getNdBW(sta, sat);
+		double rate = getHSCapacity(sat.transponderBandwidth, s, n);
+		double eb1 = Math.pow(10, s/10d) / rate;
+		double n0 = Math.pow(10, getN0(sta, sat)/10d);
+		
+		double eb2 = Math.pow(10, s/10d) / (d*rate);
+		
+		System.out.println("ChannelHelper.getBER() Shannon limit uncoded BER: "+ 0.5*Erf.erfc(Math.sqrt(eb1/n0)) );
+		System.out.println("ChannelHelper.getBER() "+d+"*Shannon limit uncoded BER: "+ 0.5*Erf.erfc(Math.sqrt(eb2/n0)) +" at eb/n0="+10*Math.log10(eb2/n0));
+
+		return 0;
+	}
+	
 
 }
