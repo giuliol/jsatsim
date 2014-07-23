@@ -823,11 +823,11 @@ public class Main extends JFrame {
 		
 		String st = "Total Attenuation = "+twoDec(ChannelHelper.getFreeSpaceLoss(sta, sat)+ChannelHelper.getRainAttenuation(sta))+" dB  ( "+twoDec(ChannelHelper.getFreeSpaceLoss(sta, sat))+" dB (FSL) + " +twoDec(ChannelHelper.getRainAttenuation(sta))+" dB (Rain)  )";
 		st += "\nAntenna Gain = "+twoDec(sta.getAntennaGain())+ " dB";
-		st += "\nS at receiver = "+twoDec(SdBW-sta.getFigureofMerit()+30)+" dBm";
+		st += "\nC at receiver = "+twoDec(SdBW-sta.getFigureofMerit()+30)+" dBm";
 		st += "\nFigure of Merit ="+twoDec(sta.getFigureofMerit())+ " dB";
-		st += "\nS = " + twoDec(SdBW+30)+" dBm";
+		st += "\nC = " + twoDec(SdBW+30)+" dBm";
 		st += "\nN = " + twoDec(NdBW+30) + " dBm";
-		st += "\nSNR = "+twoDec(SdBW - NdBW ) +" dB";
+		st += "\nCNR = "+twoDec(SdBW - NdBW ) +" dB";
 		st += "\nShannon limit = "+twoDec(ChannelHelper.getHSCapacity(sat.transponderBandwidth, SdBW , NdBW ))+" kbps\nBitrate = "+ twoDec(rate)+" kbps";
 		st += "\nEb/n0 = "+twoDec(EbN0) + ", BER = "+ ber;
 //		st += "\nat 0.8C = "+twoDec(0.8*rate/1000d)+ " uncoded BER = "+ ChannelHelper.getBER(sta, sat,0.8);
