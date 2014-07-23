@@ -6,7 +6,7 @@ public class ChannelHelperTest {
 
 	@Test
 	public void test() {
-		ChannelHelper.Satellite sat= new ChannelHelper.Satellite(45,600000,Orbits.ORBIT_TYPE_LEO, Modulation.BPSK);
+		ChannelHelper.Satellite sat= new ChannelHelper.Satellite(45,600000,Orbits.ORBIT_TYPE_LEO, Modulation.MOD_BPSK);
 		sat.ORBIT_TYPE=Orbits.ORBIT_TYPE_LEO;
 		
 		ChannelHelper.Station sta = new ChannelHelper.Station(39, 0, 25.0, 47.1 , 15, 60,100, 0);
@@ -23,7 +23,7 @@ public class ChannelHelperTest {
 		System.out.println("rain attenuation att="+rain +"\nFSL = "+fsl);
 		
 		double s = sat.EIRP - fsl - rain;
-		double n = ChannelHelper.getN0(sta, sat);
+		double n = ChannelHelper.getN0dBW(sta, sat);
 				
 		double bw=ChannelHelper.getHSCapacity(600000000, s  , n);
 		

@@ -25,10 +25,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -54,6 +56,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.InternationalFormatter;
+
+import org.apache.commons.math3.special.Erf;
 
 import dsp.netem.NETEMctrl;
 import dsp.unige.figures.ChannelHelper;
@@ -134,6 +138,7 @@ public class Main extends JFrame {
 
 	private void initUI() {
 
+		Locale.setDefault(Locale.US);
 		frmSatelliteEmulator = new JFrame("JSpinner Sample");
 		BorderLayout borderLayout = (BorderLayout) frmSatelliteEmulator.getContentPane().getLayout();
 		borderLayout.setVgap(5);
@@ -175,7 +180,7 @@ public class Main extends JFrame {
 		gbc_lblEirp.gridy = 1;
 		sat_panel.add(lblEirp, gbc_lblEirp);
 
-		txtEirptf = new JFormattedTextField(NumberFormat.getNumberInstance());
+		txtEirptf = new JFormattedTextField(NumberFormat.getNumberInstance(Locale.US));
 		txtEirptf.setText("45");
 		GridBagConstraints gbc_txtEirptf = new GridBagConstraints();
 		gbc_txtEirptf.fill = GridBagConstraints.HORIZONTAL;
@@ -464,7 +469,7 @@ public class Main extends JFrame {
 		gbc_lblAntennaEffectiveAperture.gridy = 9;
 		sta_panel.add(lblAntennaEffectiveAperture, gbc_lblAntennaEffectiveAperture);
 		
-		txtAntennaDiameter = new JFormattedTextField(NumberFormat.getNumberInstance());
+		txtAntennaDiameter = new JFormattedTextField(NumberFormat.getNumberInstance(Locale.US));
 		txtAntennaDiameter.setText("1");
 		GridBagConstraints gbc_formattedTextField1 = new GridBagConstraints();
 		gbc_formattedTextField1.insets = new Insets(0, 0, 5, 5);
@@ -797,8 +802,7 @@ public class Main extends JFrame {
 		ChannelHelper.Satellite sat = parseSatelliteParameters();
 
 		int rate = ChannelHelper.getRate(sta, sat);
-		double ber = ChannelHelper.getBER(sta, sat);
-
+		double ber = ChannelHelper.getBER(sta, sat,rate);
 		StringBuffer sb=netemController.setNetworkConditions(""+String.format("%6.4f",rate/1000d), String.format("%6.2f",ber), 0+"", Orbits.getDelay(sat.ORBIT_TYPE) +"") ;
 
 		setMiscData(sat, sta, rate,ber);
@@ -809,20 +813,29 @@ public class Main extends JFrame {
 
 
 	private void setMiscData(Satellite sat, Station sta, int rate, double ber) {
+		
+		double SdBW, NdBW, shannon, Eb, N0, EbN0;
+		SdBW = ChannelHelper.getSdBW(sta, sat);
+		NdBW = ChannelHelper.getNdBW(sta, sat);
+		Eb = 10*Math.log10(Math.pow(10, SdBW/10d)  / (rate*1000d)) ;
+		N0 = ChannelHelper.getN0dBW(sta, sat);
+		EbN0 =  Eb - N0;
+		
 		String st = "Total Attenuation = "+twoDec(ChannelHelper.getFreeSpaceLoss(sta, sat)+ChannelHelper.getRainAttenuation(sta))+" dB  ( "+twoDec(ChannelHelper.getFreeSpaceLoss(sta, sat))+" dB (FSL) + " +twoDec(ChannelHelper.getRainAttenuation(sta))+" dB (Rain)  )";
 		st += "\nAntenna Gain = "+twoDec(sta.getAntennaGain())+ " dB";
-		st += "\nS at receiver = "+twoDec(ChannelHelper.getSdBW(sta, sat)-sta.getFigureofMerit()+30)+" dBm";
+		st += "\nS at receiver = "+twoDec(SdBW-sta.getFigureofMerit()+30)+" dBm";
 		st += "\nFigure of Merit ="+twoDec(sta.getFigureofMerit())+ " dB";
-		st += "\nS = " + twoDec(ChannelHelper.getSdBW(sta, sat)+30)+" dBm";
-		st += "\nN = " + twoDec(ChannelHelper.getNdBW(sta, sat)+30) + " dBm";
-		st += "\nSNR = "+twoDec(ChannelHelper.getSdBW(sta, sat) - ChannelHelper.getNdBW(sta, sat) ) +" dB";
-		st += "\nShannon limit = "+twoDec(rate/1000d)+" kbps";
+		st += "\nS = " + twoDec(SdBW+30)+" dBm";
+		st += "\nN = " + twoDec(NdBW+30) + " dBm";
+		st += "\nSNR = "+twoDec(SdBW - NdBW ) +" dB";
+		st += "\nShannon limit = "+twoDec(ChannelHelper.getHSCapacity(sat.transponderBandwidth, SdBW , NdBW ))+" kbps\nBitrate = "+ twoDec(rate)+" kbps";
+		st += "\nEb/n0 = "+twoDec(EbN0) + ", BER = "+ ber;
 //		st += "\nat 0.8C = "+twoDec(0.8*rate/1000d)+ " uncoded BER = "+ ChannelHelper.getBER(sta, sat,0.8);
+		
 		
 		String FECString = "Turbo code FEC";
 		FECString += "3 Iterations\nRate = 1/2\n";
 		FEClabel.setText(FECString);
-		ChannelHelper.getBER(sta, sat,0.8);
 		txtrDatamisc.setText(st);
 	}
 
@@ -840,6 +853,7 @@ public class Main extends JFrame {
 		transpBW = Integer.parseInt(txtTranspbw.getText());
 		orbType = orbitComboBox.getSelectedIndex(); 
 		modulation = modulationComboBox.getSelectedIndex();
+		System.out.println("Main.parseSatelliteParameters() modulation "+ Modulation.getHRname(modulation));
 
 		Satellite sat = new Satellite(EIRP, transpBW, orbType, modulation);
 		return sat;
@@ -857,7 +871,7 @@ public class Main extends JFrame {
 		int antennaNoiseTemp = Integer.parseInt(txtNoisetemp.getText());
 		int amplifierNoiseTemp = Integer.parseInt(txtampliNoiseTemp.getText());
 		double antennaDiameter = Double.parseDouble(txtAntennaDiameter.getText());
-
+		
 		Station sta =  new Station(latitude, altitude, rainfallRate, elAngle, carFreq, antennaNoiseTemp,amplifierNoiseTemp, antennaDiameter);
 		return sta;
 	}

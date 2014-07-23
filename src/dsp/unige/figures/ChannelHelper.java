@@ -22,7 +22,7 @@ public class ChannelHelper {
 	 * @param satellite
 	 * @return the noise power density in dBW/Hz
 	 */
-	public static double getN0(Station sta, Satellite sat){
+	public static double getN0dBW(Station sta, Satellite sat){
 		
 		double Te = sta.antennaNoiseTemperature + sta.amplifierNoiseTemperature + sta.getRainNoiseTemperature(); 
 		return -228.6 + 10*Math.log10(Te);
@@ -35,9 +35,9 @@ public class ChannelHelper {
 	 * @param n Noise level in dB
 	 * @return Shannon max. theoretical bandwidth in bps.
 	 */
-	static double getHSCapacity(int B, double s, double n){
+	static  public double getHSCapacity(int B, double s, double n){
 		System.out.println("ChannelHelper.getHSCapacity() B="+B+" kHz");
-		return B*Math.log(1+ Math.pow(10,(s-n)/10))/Math.log(2) * 1000;  // kHz to Hz
+		return B*Math.log(1+ Math.pow(10,(s-n)/10))/Math.log(2);
 	}
 
 
@@ -332,12 +332,9 @@ public class ChannelHelper {
 			EIRP=eIRP2;
 			transponderBandwidth=transpBW;
 			ORBIT_TYPE=orbType;
+			modulation=modul;
 			
 			
-		}
-		
-		public double getBER(double ebn0, int MODULATION_TYPE){
-			return Modulation.getBER(ebn0,MODULATION_TYPE);
 		}
 		
 		public int txPower;
@@ -354,54 +351,30 @@ public class ChannelHelper {
 	
 	public static int getRate(Station sta, Satellite sat) {
 		
-		double s = getSdBW(sta,sat);
-		double n = getNdBW(sta, sat);
-		double bw = getHSCapacity(sat.transponderBandwidth, s , n);
-		return (int) bw;
+		System.out.println("ChannelHelper.getRate() "+Modulation.getHRname(sat.modulation));
+		double br = sat.transponderBandwidth * Modulation.getSpectralEfficiency(sat.modulation);
+		return (int) br;
 	}
 
 	public static double getNdBW(Station sta, Satellite sat) {
 		
-		return getN0(sta, sat)+10*Math.log10(sat.transponderBandwidth)+30; // KHz to Hz
+		return getN0dBW(sta, sat)+10*Math.log10(sat.transponderBandwidth)+30; // KHz to Hz
 	}
 
-	public static double getBER(Station sta, Satellite sat) {
-		double s = sat.EIRP - getFreeSpaceLoss(sta, sat) - getRainAttenuation(sta);
-		System.out.println("ChannelHelper.getBER() s[dBW]="+s);
-		System.out.println("ChannelHelper.getBER() sta.frequ "+sat.transponderBandwidth +" kHz");
-		double n = getNdBW(sta, sat);
-		System.out.println("ChannelHelper.getBER() n0[dBW/Hz]="+getN0(sta, sat)+", n[dBW] = "+n);
-		
-		// FIXME casino!!
-		double eb = Math.pow(10,s/10d) / getHSCapacity(sat.transponderBandwidth, s, n);
-		double n0 = Math.pow(10, getN0(sta, sat)/10d);
+	public static double getBER(Station sta, Satellite sat, double rate) {
 		
 		
-		
-		System.out.println("ChannelHelper.getBER() snr [dB]="+(s-n));
-		System.out.println("ChannelHelper.getBER() snr ="+Math.pow(10, (s-n)/10d));
-		System.out.println("ChannelHelper.getBER() Rb="+getHSCapacity(sat.transponderBandwidth, s, n) );
-		System.out.println("ChannelHelper.getBER() eb/n0 [dB] = "+(10*Math.log10(eb/n0)) );
-		System.out.println("ChannelHelper.getBER() BER: "+ 0.5*Erf.erfc(Math.sqrt(eb/n0)));
-		return	sat.getBER(0,sat.modulation);
-
+		double SdBW, NdBW, Eb, N0, EbN0;
+		SdBW = getSdBW(sta, sat);
+		NdBW = getNdBW(sta, sat);
+		Eb = 10*Math.log10(Math.pow(10, SdBW/10d)  / (rate*1000d)) ;
+		N0 = getN0dBW(sta, sat);
+		EbN0 =  Eb - N0;
+		return 0.5*Erf.erfc(Math.sqrt(EbN0));
+				
 	}
 
-	public static double getBER(Station sta, Satellite sat, double d) {
-		
-		double s = sat.EIRP - getFreeSpaceLoss(sta, sat) - getRainAttenuation(sta);
-		double n = getNdBW(sta, sat);
-		double rate = getHSCapacity(sat.transponderBandwidth, s, n);
-		double eb1 = Math.pow(10, s/10d) / rate;
-		double n0 = Math.pow(10, getN0(sta, sat)/10d);
-		
-		double eb2 = Math.pow(10, s/10d) / (d*rate);
-		
-		System.out.println("ChannelHelper.getBER() Shannon limit uncoded BER: "+ 0.5*Erf.erfc(Math.sqrt(eb1/n0)) );
-		System.out.println("ChannelHelper.getBER() "+d+"*Shannon limit uncoded BER: "+ 0.5*Erf.erfc(Math.sqrt(eb2/n0)) +" at eb/n0="+10*Math.log10(eb2/n0));
-
-		return 0;
-	}
+	
 	
 
 }
