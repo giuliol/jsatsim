@@ -119,11 +119,11 @@ public class Main extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		initUI();
 		setShortCut();
-		// try {
-		// chooseNIC();
-		// } catch (SocketException e1) {
-		// e1.printStackTrace();
-		// }
+		try {
+			chooseNIC();
+		} catch (SocketException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	private void setShortCut() {

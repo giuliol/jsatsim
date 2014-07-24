@@ -32,7 +32,7 @@ public class FEC {
 
 	public static final int fecs = 1;
 
-	private static final String FEC_BCH_63_57_HRNAME = "1/2 Rate CC + RS(255,233)";
+	private static final String FEC_BCH_63_57_HRNAME = "0.9 Rate BCH(63,57)";
 
 	public static String getHRname(int FEC_TYPE) {
 		switch (FEC_TYPE) {
