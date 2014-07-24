@@ -3,38 +3,87 @@
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="dsp.unige.figures.ChannelHelper.Station" project="JavaReceiver" 
     file="/JavaReceiver/src/dsp/unige/figures/ChannelHelper.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="349" width="239" x="232" y="228"/>    
+    <position height="493" width="302" x="885" y="426"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="dsp.unige.figures.ChannelHelper.Satellite" project="JavaReceiver" 
+  <class id="2" language="java" name="dsp.unige.figures.ChannelHelper" project="JavaReceiver" 
     file="/JavaReceiver/src/dsp/unige/figures/ChannelHelper.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="151" width="151" x="41" y="228"/>    
+    <position height="259" width="257" x="885" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="dsp.unige.figures.ChannelHelper" project="JavaReceiver" 
+  <class id="3" language="java" name="dsp.unige.figures.Orbits" project="JavaReceiver" 
+    file="/JavaReceiver/src/dsp/unige/figures/Orbits.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="349" width="143" x="702" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="dsp.unige.figures.SimConstants" project="JavaReceiver" 
+    file="/JavaReceiver/src/dsp/unige/figures/SimConstants.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="169" width="145" x="517" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="dsp.unige.figures.Modulation" project="JavaReceiver" 
+    file="/JavaReceiver/src/dsp/unige/figures/Modulation.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="241" width="173" x="304" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="dsp.unige.figures.FEC.FECparams" project="JavaReceiver" 
+    file="/JavaReceiver/src/dsp/unige/figures/FEC.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="133" width="131" x="41" y="426"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="dsp.unige.figures.ChannelHelper.Satellite" project="JavaReceiver" 
     file="/JavaReceiver/src/dsp/unige/figures/ChannelHelper.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="151" width="232" x="137" y="37"/>    
+    <position height="205" width="151" x="694" y="426"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <nesting id="4">    
-    <end type="SOURCE" refId="3"/>    
+  <class id="8" language="java" name="dsp.unige.figures.FEC" project="JavaReceiver" 
+    file="/JavaReceiver/src/dsp/unige/figures/FEC.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="205" width="223" x="41" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <nesting id="9">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="7"/>  
+  </nesting>  
+  <nesting id="10">    
+    <end type="SOURCE" refId="2"/>    
     <end type="TARGET" refId="1"/>  
   </nesting>  
-  <nesting id="5">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="2"/>  
+  <nesting id="11">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="6"/>  
   </nesting>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
