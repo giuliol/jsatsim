@@ -374,9 +374,11 @@ public class ChannelHelper {
 		Eb = 10*Math.log10(Math.pow(10, SdBW/10d)  / (rate*1000d)) ;
 		N0 = getN0dBW(sta, sat);
 		EbN0 =  Eb - N0;
-		double uncodedBER = 0.5*Erf.erfc(Math.sqrt(EbN0));
-		return FEC.getBlockCodePE(EbN0, FEC.getFECParams(sat.FEC).n,FEC.getFECParams(sat.FEC).k, FEC.getFECParams(sat.FEC).t);
-				
+		double ber = FEC.getBlockCodePE(EbN0, FEC.getFECParams(sat.FEC).n,FEC.getFECParams(sat.FEC).k, FEC.getFECParams(sat.FEC).t);
+		if(!Double.isNaN(ber))
+			return ber;
+		else 
+			return 0.5;
 	}
 
 	public static double getUncodedBER(Station sta, Satellite sat, double rate) {
@@ -386,7 +388,11 @@ public class ChannelHelper {
 		Eb = 10*Math.log10(Math.pow(10, SdBW/10d)  / (rate*1000d)) ;
 		N0 = getN0dBW(sta, sat);
 		EbN0 =  Eb - N0;
-		return 0.5*Erf.erfc(Math.sqrt(EbN0));	
+		double ber = 0.5*Erf.erfc(Math.sqrt(EbN0));	
+		if(!Double.isNaN(ber))
+			return ber;
+		else 
+			return 0.5;
 	}
 
 
