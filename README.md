@@ -1,4 +1,3 @@
-
 ### What is this repository for? ###
 
 * Java Satellite Channel Emulator
@@ -15,3 +14,7 @@ java -jar <name>.jar
 ### Who do I talk to? ###
 
 * giulio.luzzati@edu.unige.it
+
+### Will ever a proper documentation be provided? ###
+
+* Just maybe. Should this be of any interest for anyone, I promise to put my best effort into it, no guarantees - so drop me a line if you are interested.
