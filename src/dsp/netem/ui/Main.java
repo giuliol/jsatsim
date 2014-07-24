@@ -788,11 +788,11 @@ public class Main extends JFrame {
 		ChannelHelper.Station sta = parseStationParameters();
 		ChannelHelper.Satellite sat = parseSatelliteParameters();
 
-		int rate = ChannelHelper.getRate(sta, sat);
+		int rate = ChannelHelper.getInfoRate(sta, sat);
 		double ber = ChannelHelper.getBER(sta, sat,rate);
-		StringBuffer sb=netemController.setNetworkConditions(""+String.format("%6.4f",rate/1000d), String.format("%6.2f",ber), 0+"", Orbits.getDelay(sat.ORBIT_TYPE) +"") ;
+		StringBuffer sb=netemController.setNetworkConditions(""+rate, String.format("%e",ber*100), 0+"", Orbits.getDelay(sat.ORBIT_TYPE)*2 +"") ;
 
-		setMiscData(sat, sta, rate,ber);
+		setMiscData(sat, sta, ChannelHelper.getRate(sta, sat),ber);
 		txtrNetemoutput.append("\n"+sb.toString());
 	}
 
