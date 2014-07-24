@@ -10,22 +10,19 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,15 +54,18 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.InternationalFormatter;
 
-import org.apache.commons.math3.special.Erf;
-
 import dsp.netem.NETEMctrl;
 import dsp.unige.figures.ChannelHelper;
 import dsp.unige.figures.ChannelHelper.Satellite;
 import dsp.unige.figures.ChannelHelper.Station;
+import dsp.unige.figures.FEC;
 import dsp.unige.figures.Modulation;
 import dsp.unige.figures.Orbits;
 import dsp.unige.figures.SimConstants;
+
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.border.EtchedBorder;
 
 public class Main extends JFrame {
 
@@ -139,7 +139,11 @@ public class Main extends JFrame {
 	private void initUI() {
 
 		Locale.setDefault(Locale.US);
+
+		
 		frmSatelliteEmulator = new JFrame("JSpinner Sample");
+
+		
 		BorderLayout borderLayout = (BorderLayout) frmSatelliteEmulator.getContentPane().getLayout();
 		borderLayout.setVgap(5);
 		borderLayout.setHgap(5);
@@ -149,7 +153,7 @@ public class Main extends JFrame {
 		frmSatelliteEmulator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel sat_panel = new JPanel();
-		sat_panel.setBorder(new CompoundBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Satellite", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)), null));
+		sat_panel.setBorder(new CompoundBorder(new EmptyBorder(5, 10, 5, 5), new TitledBorder(new LineBorder(new Color(100, 149, 237), 3, true), "Satellite", TitledBorder.TRAILING, TitledBorder.TOP, null, new Color(100, 149, 237))));
 		frmSatelliteEmulator.getContentPane().add(sat_panel, BorderLayout.WEST);
 		GridBagLayout gbl_sat_panel = new GridBagLayout();
 		gbl_sat_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0};
@@ -279,7 +283,7 @@ public class Main extends JFrame {
 		sat_panel.add(modulationComboBox, gbc_modulationComboBox);
 
 		JPanel sta_panel = new JPanel();
-		sta_panel.setBorder(new CompoundBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Earth Station", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)), null));
+		sta_panel.setBorder(new CompoundBorder(new EmptyBorder(5, 5, 5, 10), new TitledBorder(new LineBorder(new Color(143, 188, 143), 3, true), "Earth Station", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(143, 188, 143))));
 		frmSatelliteEmulator.getContentPane().add(sta_panel, BorderLayout.EAST);
 		GridBagLayout gbl_sta_panel = new GridBagLayout();
 		gbl_sta_panel.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0};
@@ -494,7 +498,7 @@ public class Main extends JFrame {
 		gbl_status_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
 		status_panel.setLayout(gbl_status_panel);
 
-		Component verticalStrut_2 = Box.createVerticalStrut(20);
+		Component verticalStrut_2 = Box.createVerticalStrut(5);
 		GridBagConstraints gbc_verticalStrut_2 = new GridBagConstraints();
 		gbc_verticalStrut_2.insets = new Insets(0, 0, 5, 5);
 		gbc_verticalStrut_2.gridx = 1;
@@ -502,7 +506,7 @@ public class Main extends JFrame {
 		status_panel.add(verticalStrut_2, gbc_verticalStrut_2);
 
 		btnSet = new JButton("SET");
-		btnSet.setFont(new Font("DejaVu Sans", Font.PLAIN, 20));
+		btnSet.setFont(new Font("DejaVu Sans", Font.BOLD, 15));
 		btnSet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setParameters();
@@ -510,27 +514,12 @@ public class Main extends JFrame {
 		});
 
 		GridBagConstraints gbc_btnSet = new GridBagConstraints();
-		gbc_btnSet.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnSet.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSet.gridx = 1;
 		gbc_btnSet.gridy = 1;
 		status_panel.add(btnSet, gbc_btnSet);
 
-		Component horizontalStrut_3 = Box.createHorizontalStrut(20);
-		GridBagConstraints gbc_horizontalStrut_3 = new GridBagConstraints();
-		gbc_horizontalStrut_3.insets = new Insets(0, 0, 5, 0);
-		gbc_horizontalStrut_3.gridx = 2;
-		gbc_horizontalStrut_3.gridy = 0;
-		status_panel.add(horizontalStrut_3, gbc_horizontalStrut_3);
-
-		Component horizontalStrut_4 = Box.createHorizontalStrut(20);
-		GridBagConstraints gbc_horizontalStrut_4 = new GridBagConstraints();
-		gbc_horizontalStrut_4.insets = new Insets(0, 0, 5, 5);
-		gbc_horizontalStrut_4.gridx = 0;
-		gbc_horizontalStrut_4.gridy = 0;
-		status_panel.add(horizontalStrut_4, gbc_horizontalStrut_4);
-
-		Component verticalStrut_7 = Box.createVerticalStrut(20);
+		Component verticalStrut_7 = Box.createVerticalStrut(5);
 		GridBagConstraints gbc_verticalStrut_7 = new GridBagConstraints();
 		gbc_verticalStrut_7.insets = new Insets(0, 0, 5, 5);
 		gbc_verticalStrut_7.gridx = 1;
@@ -538,14 +527,16 @@ public class Main extends JFrame {
 		status_panel.add(verticalStrut_7, gbc_verticalStrut_7);
 
 		txtrDatamisc = new JTextArea(8,10);
-		txtrDatamisc.setFont(new Font("DejaVu Sans", Font.PLAIN, 14));
+		txtrDatamisc.setForeground(Color.YELLOW);
+		txtrDatamisc.setBackground(Color.DARK_GRAY);
+		txtrDatamisc.setFont(new Font("DejaVu Sans", Font.PLAIN, 9));
 		txtrDatamisc.setTabSize(5);
 		txtrDatamisc.setWrapStyleWord(true);
 		txtrDatamisc.setEditable(false);
 		txtrDatamisc.setText("please apply settings to continue..");
 		GridBagConstraints gbc_txtrDatamisc = new GridBagConstraints();
 		gbc_txtrDatamisc.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtrDatamisc.insets = new Insets(0, 0, 5, 5);
+		gbc_txtrDatamisc.insets = new Insets(5, 15, 5, 15);
 		gbc_txtrDatamisc.gridx = 1;
 		gbc_txtrDatamisc.gridy = 3;
 		status_panel.add(txtrDatamisc, gbc_txtrDatamisc);
@@ -555,13 +546,16 @@ public class Main extends JFrame {
 		scrollPane.setEnabled(false);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane.insets = new Insets(5, 5, 5, 5);
 		gbc_scrollPane.gridx = 1;
 		gbc_scrollPane.gridy = 4;
 		status_panel.add(scrollPane, gbc_scrollPane);
 
 
 		txtrNetemoutput = new JTextArea(8,10);
+		txtrNetemoutput.setBackground(Color.DARK_GRAY);
+		txtrNetemoutput.setForeground(new Color(100, 149, 237));
+		txtrNetemoutput.setFont(new Font("DejaVu Sans", Font.PLAIN, 9));
 		scrollPane.setViewportView(txtrNetemoutput);
 		txtrNetemoutput.setLineWrap(true);
 		txtrNetemoutput.setEditable(false);
@@ -570,7 +564,7 @@ public class Main extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.insets = new Insets(0, 0, 5, 5);
+		gbc_panel.insets = new Insets(5, 5, 5, 5);
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.gridx = 1;
 		gbc_panel.gridy = 5;
@@ -581,13 +575,6 @@ public class Main extends JFrame {
 		//		nicLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		nicLabel.setAlignmentX(1.0f);
 		panel.add(nicLabel);
-
-		Component verticalStrut_6 = Box.createVerticalStrut(20);
-		GridBagConstraints gbc_verticalStrut_6 = new GridBagConstraints();
-		gbc_verticalStrut_6.insets = new Insets(0, 0, 0, 5);
-		gbc_verticalStrut_6.gridx = 1;
-		gbc_verticalStrut_6.gridy = 6;
-		status_panel.add(verticalStrut_6, gbc_verticalStrut_6);
 
 		frmSatelliteEmulator.pack();
 
@@ -807,34 +794,31 @@ public class Main extends JFrame {
 
 		setMiscData(sat, sta, rate,ber);
 		txtrNetemoutput.append("\n"+sb.toString());
-		
-		//		frmSatelliteEmulator.pack();
 	}
 
 
 	private void setMiscData(Satellite sat, Station sta, int rate, double ber) {
 		
-		double SdBW, NdBW, shannon, Eb, N0, EbN0;
+		double SdBW, NdBW, shannon, Eb, N0, EbN0, codedBER;
 		SdBW = ChannelHelper.getSdBW(sta, sat);
 		NdBW = ChannelHelper.getNdBW(sta, sat);
 		Eb = 10*Math.log10(Math.pow(10, SdBW/10d)  / (rate*1000d)) ;
 		N0 = ChannelHelper.getN0dBW(sta, sat);
 		EbN0 =  Eb - N0;
 		
+//		codedBER = FEC.getBlockCodePE(EbN0, 255, 187, 9);
+		
 		String st = "Total Attenuation = "+twoDec(ChannelHelper.getFreeSpaceLoss(sta, sat)+ChannelHelper.getRainAttenuation(sta))+" dB  ( "+twoDec(ChannelHelper.getFreeSpaceLoss(sta, sat))+" dB (FSL) + " +twoDec(ChannelHelper.getRainAttenuation(sta))+" dB (Rain)  )";
-		st += "\nAntenna Gain = "+twoDec(sta.getAntennaGain())+ " dB";
+		st += "\nAntenna Gain = "+twoDec(sta.getAntennaGain())+ " dB, Figure of Merit ="+twoDec(sta.getFigureofMerit())+ " dB";
 		st += "\nC at receiver = "+twoDec(SdBW-sta.getFigureofMerit()+30)+" dBm";
-		st += "\nFigure of Merit ="+twoDec(sta.getFigureofMerit())+ " dB";
-		st += "\nC = " + twoDec(SdBW+30)+" dBm";
-		st += "\nN = " + twoDec(NdBW+30) + " dBm";
+		st += "\nC = " + twoDec(SdBW+30)+" dBm, N = " + twoDec(NdBW+30) + " dBm";
 		st += "\nCNR = "+twoDec(SdBW - NdBW ) +" dB";
-		st += "\nShannon limit = "+twoDec(ChannelHelper.getHSCapacity(sat.transponderBandwidth, SdBW , NdBW ))+" kbps\nBitrate = "+ twoDec(rate)+" kbps";
-		st += "\nEb/n0 = "+twoDec(EbN0) + ", BER = "+ ber;
+		st += "\nShannon limit = "+twoDec(ChannelHelper.getHSCapacity(sat.transponderBandwidth, SdBW , NdBW ))+" kbps\nBitrate = "+ twoDec(rate)+" kbps, Information Rate = "+ twoDec(ChannelHelper.getInfoRate(sta, sat))+ " kbps";
+		st += "\nEb/n0 = "+twoDec(EbN0) + ", uncoded BER = "+ ChannelHelper.getUncodedBER(sta,sat,rate) + ", coded BER = " + ber;
 //		st += "\nat 0.8C = "+twoDec(0.8*rate/1000d)+ " uncoded BER = "+ ChannelHelper.getBER(sta, sat,0.8);
 		
 		
-		String FECString = "Turbo code FEC";
-		FECString += "3 Iterations\nRate = 1/2\n";
+		String FECString = "<html>Using BCH("+FEC.getFECParams(sat.FEC).n+", "+FEC.getFECParams(sat.FEC).k+")<br>R<sub>c</sub> = "+twoDec((double)FEC.getFECParams(sat.FEC).k/(double)FEC.getFECParams(sat.FEC).n)+"<br>t = "+FEC.getFECParams(sat.FEC).t+"</html>";
 		FEClabel.setText(FECString);
 		txtrDatamisc.setText(st);
 	}

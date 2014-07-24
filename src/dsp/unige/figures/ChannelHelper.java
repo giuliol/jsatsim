@@ -8,6 +8,7 @@ import dsp.unige.figures.ChannelHelper.Satellite;
 import dsp.unige.figures.ChannelHelper.Station;
 
 
+
 /**
  * @author giulio
  *
@@ -342,20 +343,23 @@ public class ChannelHelper {
 		public int transponderBandwidth;
 		public double EIRP;
 		public int modulation;
+		public int FEC;
 	}
 
 	public static double getSdBW(Station sta, Satellite sat){
-		System.out.println("ChannelHelper.getSdB() Antenna gain= "+sta.getAntennaGain() +" dBi");
 		return  sat.EIRP - getFreeSpaceLoss(sta, sat) - getRainAttenuation(sta) + sta.getFigureofMerit();
 	}
 	
 	public static int getRate(Station sta, Satellite sat) {
 		
-		System.out.println("ChannelHelper.getRate() "+Modulation.getHRname(sat.modulation));
-		double br = sat.transponderBandwidth * Modulation.getSpectralEfficiency(sat.modulation);
+		double br = sat.transponderBandwidth * Modulation.getSpectralEfficiency(sat.modulation) * FEC.getFECParams(sat.FEC).n / FEC.getFECParams(sat.FEC).k;
+		
 		return (int) br;
 	}
 
+	public static int getInfoRate(Station sta, Satellite sat){
+		return sat.transponderBandwidth * Modulation.getSpectralEfficiency(sat.modulation) ;
+	}
 	public static double getNdBW(Station sta, Satellite sat) {
 		
 		return getN0dBW(sta, sat)+10*Math.log10(sat.transponderBandwidth)+30; // KHz to Hz
@@ -370,9 +374,21 @@ public class ChannelHelper {
 		Eb = 10*Math.log10(Math.pow(10, SdBW/10d)  / (rate*1000d)) ;
 		N0 = getN0dBW(sta, sat);
 		EbN0 =  Eb - N0;
-		return 0.5*Erf.erfc(Math.sqrt(EbN0));
+		double uncodedBER = 0.5*Erf.erfc(Math.sqrt(EbN0));
+		return FEC.getBlockCodePE(EbN0, FEC.getFECParams(sat.FEC).n,FEC.getFECParams(sat.FEC).k, FEC.getFECParams(sat.FEC).t);
 				
 	}
+
+	public static double getUncodedBER(Station sta, Satellite sat, double rate) {
+		double SdBW, NdBW, Eb, N0, EbN0;
+		SdBW = getSdBW(sta, sat);
+		NdBW = getNdBW(sta, sat);
+		Eb = 10*Math.log10(Math.pow(10, SdBW/10d)  / (rate*1000d)) ;
+		N0 = getN0dBW(sta, sat);
+		EbN0 =  Eb - N0;
+		return 0.5*Erf.erfc(Math.sqrt(EbN0));	
+	}
+
 
 	
 	

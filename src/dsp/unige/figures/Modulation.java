@@ -1,6 +1,7 @@
 package dsp.unige.figures;
 
 import org.apache.commons.math3.special.Erf;
+import org.apache.commons.math3.util.CombinatoricsUtils;
 
 public class Modulation {
 
@@ -51,4 +52,7 @@ public class Modulation {
 		return 0;
 		}
 	}
+	
+
+	
 }
