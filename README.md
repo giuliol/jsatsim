@@ -15,6 +15,6 @@ java -jar <name>.jar
 
 * giulio.luzzati@edu.unige.it
 
-### Will ever a proper documentation be provided? ###
+### Will a proper documentation be ever provided? ###
 
 * Just maybe. Should this be of any interest for anyone, I promise to put my best effort into it, no guarantees - so drop me a line if you are interested.
