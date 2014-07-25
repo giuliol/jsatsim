@@ -387,7 +387,7 @@ public class ChannelHelper {
 		EbN0 = Eb - N0;
 		double ber = FEC.getBlockCodePE(EbN0, FEC.getFECParams(sat.FEC).n,
 				FEC.getFECParams(sat.FEC).k, FEC.getFECParams(sat.FEC).t);
-		if (!Double.isNaN(ber))
+		if (!Double.isNaN(ber) && ber<0.5)
 			return ber;
 		else
 			return 0.5;
@@ -408,7 +408,7 @@ public class ChannelHelper {
 		N0 = getN0dBW(sta, sat);
 		EbN0 = Eb - N0;
 		double ber = 0.5 * Erf.erfc(Math.sqrt(EbN0));
-		if (!Double.isNaN(ber))
+		if (!Double.isNaN(ber) && ber<0.5)
 			return ber;
 		else
 			return 0.5;
