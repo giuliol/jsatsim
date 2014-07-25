@@ -5,7 +5,7 @@
 
 ### How do I get set up? ###
 
-* Any linux machine will do.
+* Any linux machine with netem will do.
 * At least one network interface
 * Build and launch, as superuser, 
 
