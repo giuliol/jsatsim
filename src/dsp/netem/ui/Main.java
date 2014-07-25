@@ -92,7 +92,7 @@ public class Main extends JFrame {
 	private static final long serialVersionUID = -5632906239127044315L;
 	private static final int WIN_WIDTH = 800;
 	private static final int WIN_HEIGHT = 600;
-	private static final String VERSION_STRING = "<html>DSP satellite network emulator<br><font color=\"FF5555\">Giulio Luzzati, 2014</font></html>";
+	private static final String VERSION_STRING = "<html>DSP Java Satellite Link Simulator<br><font color=\"FF5555\">Giulio Luzzati, 2014</font></html>";
 
 	private JFormattedTextField txtEirptf;
 	private JFormattedTextField txtTranspbw;

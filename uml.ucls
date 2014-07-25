@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="dsp.unige.figures.ChannelHelper.Station" project="JavaReceiver" 
     file="/JavaReceiver/src/dsp/unige/figures/ChannelHelper.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="493" width="302" x="885" y="426"/>    
+    <position height="493" width="302" x="885" y="462"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="dsp.unige.figures.FEC.FECparams" project="JavaReceiver" 
     file="/JavaReceiver/src/dsp/unige/figures/FEC.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="133" width="131" x="41" y="426"/>    
+    <position height="133" width="131" x="41" y="462"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="dsp.unige.figures.ChannelHelper.Satellite" project="JavaReceiver" 
     file="/JavaReceiver/src/dsp/unige/figures/ChannelHelper.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="205" width="151" x="694" y="426"/>    
+    <position height="205" width="159" x="686" y="462"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="dsp.unige.figures.FEC" project="JavaReceiver" 
     file="/JavaReceiver/src/dsp/unige/figures/FEC.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="205" width="223" x="41" y="37"/>    
+    <position height="385" width="223" x="41" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
