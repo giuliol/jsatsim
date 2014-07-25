@@ -52,13 +52,10 @@ public class ChannelHelper {
 	 * Returns hartley-Shannon capacity in bps, given Bandwidth (in Hz) and
 	 * Signal to Noise Ratio.
 	 * 
-	 * @param B
-	 *            the channel's bandwidth
-	 * @param s
-	 *            Signal level in dB
-	 * @param n
-	 *            Noise level in dB
-	 * @return Shannon max. theoretical bandwidth in bps.
+	 * @param B the channel's bandwidth
+	 * @param s  Signal level in dB
+	 * @param n  Noise level in dB
+	 * @return Shannon max. theoretical information rate in bps.
 	 */
 	static public double getHSCapacity(int B, double s, double n) {
 		System.out.println("ChannelHelper.getHSCapacity() B=" + B + " kHz");
@@ -95,8 +92,6 @@ public class ChannelHelper {
 
 		// ==================== step 4 ===========================
 		// obtain rain attenuation
-		// TODO : controllare le reference 9 e 31 per capire bene cosa sono K e
-		// alpha
 		double gamma = s.getRainK() * Math.pow(s.R001, s.getRainAlpha());
 
 		// ==================== step 5 ===========================
@@ -182,36 +177,42 @@ public class ChannelHelper {
 		}
 
 		/**
-		 * @param sL
+		 * @param stationLatitude
 		 *            station latitude in degrees
-		 * @param sA
+		 * @param stationAltitude
 		 *            station altitude in km
 		 * @param r001
-		 *            point rainfall rate for 0.01% of an avg. year in mm/hr
-		 * @param eA
+		 *            rainfall rate
+		 * @param elevationAngle
 		 *            station elevation angle in degrees
-		 * @param f
+		 * @param frequency
 		 *            carrier frequency in GHz
-		 * @param antennaNoiseTemp
+		 * @param antennaNoiseTemperature
 		 *            antenna equivalent noise temperature
-		 * @param amplifierNoiseTemp
+		 * @param amplifierNoiseTemperature
 		 *            active circuitry equivalent noise temperature (state of
-		 *            art NASA equipm. ~30°K, typical eq. ~ 100 - 500 °K
+		 *            art NASA equipm. ~30°K, typical eq. ~ 60 - 500 °K
+		 * @param antennaDiameter
+		 *            diameter of the antenna (NOT considering efficiency)
 		 */
-		public Station(double sL, double sA, double r001, double eA, double f,
-				int antennaNoiseTemp, int amplifierNoiseTemp,
-				double antennaDiamet) {
-			stationLatitude = sL;
-			stationAltitude = sA;
-			R001 = r001;
-			elevationAngle = eA;
-			frequency = f;
+		public Station(double stationLatitude, double stationAltitude,
+				double r001, double elevationAngle, double frequency,
+				int antennaNoiseTemperature, int amplifierNoiseTemperature,
+				double antennaDiameter) {
+			this.stationLatitude = stationLatitude;
+			this.stationAltitude = stationAltitude;
+			this.R001 = r001;
+			this.elevationAngle = elevationAngle;
+			this.frequency = frequency;
 			fIdx = getFIndex(frequency);
-			antennaNoiseTemperature = antennaNoiseTemp;
-			amplifierNoiseTemperature = amplifierNoiseTemp;
-			antennaDiameter = antennaDiamet;
+			this.antennaNoiseTemperature = antennaNoiseTemperature;
+			this.amplifierNoiseTemperature = amplifierNoiseTemperature;
+			this.antennaDiameter = antennaDiameter;
 		}
 
+		/**
+		 * @return the antenna gain in dBi
+		 */
 		public double getAntennaGain() {
 			return 10 * Math.log10(109.66 * frequency * frequency
 					* antennaDiameter * antennaDiameter * APERTURE_EFFICIENCY);
@@ -245,31 +246,34 @@ public class ChannelHelper {
 		}
 
 		private static final double[] KH = { 0.0000259, 0.0000847, 0.0001071,
-			0.007056, 0.001915, 0.004115, 0.01217, 0.02386, 0.04481,
-			0.09164, 0.1571, 0.2403, 0.3374, 0.4431, 0.5521, 0.6600,
-			0.8606, 1.0315, 1.2807, 1.3671 };
+				0.007056, 0.001915, 0.004115, 0.01217, 0.02386, 0.04481,
+				0.09164, 0.1571, 0.2403, 0.3374, 0.4431, 0.5521, 0.6600,
+				0.8606, 1.0315, 1.2807, 1.3671 };
 
 		private static final double[] KV = { 0.0000308, 0.0000998, 0.0002461,
-			0.0004878, 0.001425, 0.003450, 0.01129, 0.02455, 0.05008,
-			0.09611, 0.1533, 0.2291, 0.3224, 0.4274, 0.5375, 0.6472,
-			0.8515, 1.0253, 1.1668, 1.2795, 1.3680 };
+				0.0004878, 0.001425, 0.003450, 0.01129, 0.02455, 0.05008,
+				0.09611, 0.1533, 0.2291, 0.3224, 0.4274, 0.5375, 0.6472,
+				0.8515, 1.0253, 1.1668, 1.2795, 1.3680 };
 
 		private static final double[] ALPHAH = { 0.9691, 1.0664, 1.6009,
-			1.5900, 1.4810, 1.3905, 1.2571, 1.1825, 1.1233, 1.0586, 0.9991,
-			0.9485, 0.9047, 0.8673, 0.8355, 0.8084, 0.7656, 0.7345, 0.7115,
-			0.6944, 0.6815 };
+				1.5900, 1.4810, 1.3905, 1.2571, 1.1825, 1.1233, 1.0586, 0.9991,
+				0.9485, 0.9047, 0.8673, 0.8355, 0.8084, 0.7656, 0.7345, 0.7115,
+				0.6944, 0.6815 };
 
 		private static final double[] ALPHAV = {
 
-			0.8592, 0.9490, 1.2476, 1.5882, 1.4745, 1.3797, 1.2156, 1.1216, 1.0440,
-			0.9847, 0.9491, 0.9129, 0.8761, 0.8421, 0.8123, 0.7871, 0.7486,
-			0.7215, 0.7021, 0.6876, 0.6765 };
+		0.8592, 0.9490, 1.2476, 1.5882, 1.4745, 1.3797, 1.2156, 1.1216, 1.0440,
+				0.9847, 0.9491, 0.9129, 0.8761, 0.8421, 0.8123, 0.7871, 0.7486,
+				0.7215, 0.7021, 0.6876, 0.6765 };
 
 		private static final int[] F = {
 
-			1, 2, 4, 6, 7, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80,
-			90, 100 };
+		1, 2, 4, 6, 7, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80,
+				90, 100 };
 
+		/**
+		 * @return the figure of merit of the RX system
+		 */
 		public double getFigureofMerit() {
 			return getAntennaGain()
 					- 10
@@ -285,13 +289,23 @@ public class ChannelHelper {
 		 */
 		private static final long serialVersionUID = 1L;
 
-		public Satellite(double eIRP2, int transpBW, int orbType, int modul) {
+		/**
+		 * default constructor.
+		 * 
+		 * @param EIRP the equivalent irradiated power (including antenna TX gain)
+		 * @param transp_bandwidth
+		 * @param ORBIT_TYPE see Orbits.ORBIT_TYPE_XXX
+		 * @param modulation see Modulation.MOD_XXXX
+		 * @param FECtype see FEC.FEC_XXX_XXX_XXX
+		 */
+		public Satellite(double EIRP, int transponderBandwidth, int ORBIT_TYPE,
+				int modulation, int FEC) {
 
-			EIRP = eIRP2;
-			transponderBandwidth = transpBW;
-			ORBIT_TYPE = orbType;
-			modulation = modul;
-
+			this.EIRP = EIRP;
+			this.transponderBandwidth = transponderBandwidth;
+			this.ORBIT_TYPE = ORBIT_TYPE;
+			this.modulation = modulation;
+			this.FEC = FEC;
 		}
 
 		public int txPower;
@@ -302,11 +316,26 @@ public class ChannelHelper {
 		public int FEC;
 	}
 
+	/**
+	 * Returns the received power, after freespace loss, weather attenuation and
+	 * RX system figure of merit
+	 * 
+	 * @param sta  the station object
+	 * @param sat the satellite object
+	 * @return the received carrier level in [dBW]
+	 */
 	public static double getSdBW(Station sta, Satellite sat) {
 		return sat.EIRP - getFreeSpaceLoss(sta, sat) - getRainAttenuation(sta)
 				+ sta.getFigureofMerit();
 	}
 
+	/**
+	 * Returns the actual bitrate (information rate times the coderate^-1)
+	 * 
+	 * @param sta
+	 * @param sat
+	 * @return the bitrate in [kbps]
+	 */
 	public static int getRate(Station sta, Satellite sat) {
 
 		double br = sat.transponderBandwidth
@@ -316,16 +345,40 @@ public class ChannelHelper {
 		return (int) br;
 	}
 
+	/**
+	 * Returns the information rate
+	 * 
+	 * @param sta  the station object
+	 * @param sat  the satellite object
+	 * @return the information rate in [kbps]
+	 */
 	public static int getInfoRate(Station sta, Satellite sat) {
 		return sat.transponderBandwidth
 				* Modulation.getSpectralEfficiency(sat.modulation);
 	}
 
+	/**
+	 * Returns the noise level in dBW
+	 * 
+	 * @param sta
+	 *            the station object
+	 * @param sat
+	 *            the satellite object
+	 * @return the noise level in [dBW]
+	 */
 	public static double getNdBW(Station sta, Satellite sat) {
 		return getN0dBW(sta, sat) + 10 * Math.log10(sat.transponderBandwidth)
 				+ 30; // KHz to Hz
 	}
 
+	/**
+	 * Returns the bit error rate given the information rate
+	 * 
+	 * @param sta the station object
+	 * @param sat the satellite object
+	 * @param rate the information rate
+	 * @return the error probability
+	 */
 	public static double getBER(Station sta, Satellite sat, double rate) {
 		double SdBW, Eb, N0, EbN0;
 		SdBW = getSdBW(sta, sat);
@@ -340,6 +393,14 @@ public class ChannelHelper {
 			return 0.5;
 	}
 
+	/**
+	 * Returns the bit error rate when NOT using any FEC code
+	 * 
+	 * @param sta  the station object
+	 * @param sat the satellite object
+	 * @param rate the information rate
+	 * @return the ber rate in (0,0.5)
+	 */
 	public static double getUncodedBER(Station sta, Satellite sat, double rate) {
 		double SdBW, Eb, N0, EbN0;
 		SdBW = getSdBW(sta, sat);

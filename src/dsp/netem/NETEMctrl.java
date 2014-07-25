@@ -40,9 +40,6 @@ public class NETEMctrl {
 			String loss, String delay, String pBuffer) {
 		Process p, p2;
 		try {
-			// System.out.println("setnetcondition: eseguo");
-			// System.out.println("tc qdisc change dev "+netInterface+" root netem rate "+rate+"kbit loss "+loss+"% corrupt "+ber+"% delay "+delay+"ms");
-			// System.out.println("\n");
 
 			p = Runtime.getRuntime().exec(
 					"tc qdisc change dev " + netInterface + " root netem rate "
@@ -146,8 +143,10 @@ public class NETEMctrl {
 		}
 	}
 
+	/**
+	 * Resets the netem parameters, removes any previous setting 
+	 */
 	public void reset() {
-		// TODO Auto-generated method stub
 		try {
 			Runtime.getRuntime().exec(
 					"tc qdisc del dev " + netInterface + " root netem");
@@ -155,7 +154,6 @@ public class NETEMctrl {
 					"tc qdisc add dev " + netInterface + " root netem");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

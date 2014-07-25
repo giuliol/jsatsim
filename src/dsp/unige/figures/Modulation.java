@@ -35,6 +35,11 @@ public class Modulation {
 	private static final String MOD_QPSK_HRNAME = "QPSK";
 	private static final String MOD_8PSK_HRNAME = "8PSK";
 
+	/**
+	 * Returns a human readable string identifying the modulation
+	 * @param MODULATION_TYPE
+	 * @return
+	 */
 	public static final String getHRname(int MODULATION_TYPE) {
 		switch (MODULATION_TYPE) {
 		case MOD_BPSK:
@@ -52,6 +57,11 @@ public class Modulation {
 
 	public static int mods = 3;
 
+	/**
+	 * Returns the spectral efficiency of the modulation 
+	 * @param modulation
+	 * @return the spectral efficiency [b/Hz]
+	 */
 	public static int getSpectralEfficiency(int modulation) {
 		System.out.println("Modulation.getSpectralEfficiency() modulation "
 				+ getHRname(modulation));

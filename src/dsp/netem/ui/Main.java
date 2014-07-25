@@ -22,7 +22,6 @@
  * 
  */
 
-
 package dsp.netem.ui;
 
 import java.awt.BorderLayout;
@@ -90,8 +89,6 @@ import dsp.unige.figures.SimConstants;
 
 public class Main extends JFrame {
 
-
-
 	private static final long serialVersionUID = -5632906239127044315L;
 	private static final int WIN_WIDTH = 800;
 	private static final int WIN_HEIGHT = 600;
@@ -104,7 +101,7 @@ public class Main extends JFrame {
 	private JFormattedTextField txtAltitudetf;
 	private JFormattedTextField txtElevtf;
 	private JFormattedTextField txtNoisetemp, txtampliNoiseTemp,
-	txtAntennaDiameter;
+			txtAntennaDiameter;
 
 	private JFrame frmSatelliteEmulator;
 	private JButton btnSet;
@@ -113,7 +110,7 @@ public class Main extends JFrame {
 	JTextArea txtrDatamisc, txtrNetemoutput;
 	private NETEMctrl netemController;
 	private JLabel nicLabel;
-	private JLabel FEClabel;
+	private JComboBox fecComboBox;
 
 	public Main() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -186,9 +183,9 @@ public class Main extends JFrame {
 		frmSatelliteEmulator.getContentPane().add(sat_panel, BorderLayout.WEST);
 		GridBagLayout gbl_sat_panel = new GridBagLayout();
 		gbl_sat_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				1.0, 0.0, 0.0 };
-		gbl_sat_panel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0 };
-		gbl_sat_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+				1.0, 0.0 };
+		gbl_sat_panel.columnWeights = new double[] { 0.0, 1.0, 1.0, 0.0 };
+		gbl_sat_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_sat_panel.columnWidths = new int[] { 0 };
 		sat_panel.setLayout(gbl_sat_panel);
 
@@ -225,31 +222,37 @@ public class Main extends JFrame {
 		sat_panel.add(txtEirptf, gbc_txtEirptf);
 		txtEirptf.setColumns(10);
 
+		JLabel lblFec = new JLabel("FEC");
+		GridBagConstraints gbc_lblFec = new GridBagConstraints();
+		gbc_lblFec.anchor = GridBagConstraints.EAST;
+		gbc_lblFec.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFec.gridx = 1;
+		gbc_lblFec.gridy = 5;
+		sat_panel.add(lblFec, gbc_lblFec);
+
+		String[] fecs = new String[FEC.fecs];
+		for (int i = 0; i < fecs.length; i++) {
+			fecs[i] = FEC.getHRname(i);
+		}
+
+		fecComboBox = new JComboBox(fecs);
+		GridBagConstraints gbc_fecdropdown = new GridBagConstraints();
+		gbc_fecdropdown.insets = new Insets(0, 0, 5, 5);
+		gbc_fecdropdown.fill = GridBagConstraints.HORIZONTAL;
+		gbc_fecdropdown.gridx = 2;
+		gbc_fecdropdown.gridy = 5;
+		sat_panel.add(fecComboBox, gbc_fecdropdown);
+
 		Component verticalStrut_4 = Box.createVerticalStrut(20);
 		GridBagConstraints gbc_verticalStrut_4 = new GridBagConstraints();
 		gbc_verticalStrut_4.insets = new Insets(0, 0, 5, 5);
 		gbc_verticalStrut_4.gridx = 1;
-		gbc_verticalStrut_4.gridy = 5;
+		gbc_verticalStrut_4.gridy = 6;
 		sat_panel.add(verticalStrut_4, gbc_verticalStrut_4);
-
-		JPanel FECpanel = new JPanel();
-		FECpanel.setBorder(new TitledBorder(new BevelBorder(
-				BevelBorder.LOWERED, null, null, null, null), "FEC",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_FECpanel = new GridBagConstraints();
-		gbc_FECpanel.gridwidth = 2;
-		gbc_FECpanel.insets = new Insets(0, 0, 5, 5);
-		gbc_FECpanel.fill = GridBagConstraints.BOTH;
-		gbc_FECpanel.gridx = 1;
-		gbc_FECpanel.gridy = 6;
-		sat_panel.add(FECpanel, gbc_FECpanel);
-
-		FEClabel = new JLabel("");
-		FECpanel.add(FEClabel);
 
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		GridBagConstraints gbc_horizontalStrut = new GridBagConstraints();
-		gbc_horizontalStrut.insets = new Insets(0, 0, 5, 5);
+		gbc_horizontalStrut.insets = new Insets(0, 0, 0, 5);
 		gbc_horizontalStrut.gridx = 0;
 		gbc_horizontalStrut.gridy = 7;
 		sat_panel.add(horizontalStrut, gbc_horizontalStrut);
@@ -304,6 +307,7 @@ public class Main extends JFrame {
 		for (int i = 0; i < modulation.length; i++) {
 			modulation[i] = Modulation.getHRname(i);
 		}
+
 		modulationComboBox = new JComboBox(modulation);
 		GridBagConstraints gbc_modulationComboBox = new GridBagConstraints();
 		gbc_modulationComboBox.insets = new Insets(0, 0, 5, 5);
@@ -854,10 +858,10 @@ public class Main extends JFrame {
 		String st = "Total Attenuation = "
 				+ twoDec(ChannelHelper.getFreeSpaceLoss(sta, sat)
 						+ ChannelHelper.getRainAttenuation(sta)) + " dB  ( "
-						+ twoDec(ChannelHelper.getFreeSpaceLoss(sta, sat))
-						+ " dB (FSL) + "
-						+ twoDec(ChannelHelper.getRainAttenuation(sta))
-						+ " dB (Rain)  )";
+				+ twoDec(ChannelHelper.getFreeSpaceLoss(sta, sat))
+				+ " dB (FSL) + "
+				+ twoDec(ChannelHelper.getRainAttenuation(sta))
+				+ " dB (Rain)  )";
 		st += "\nAntenna Gain = " + twoDec(sta.getAntennaGain())
 				+ " dB, Figure of Merit =" + twoDec(sta.getFigureofMerit())
 				+ " dB";
@@ -869,23 +873,12 @@ public class Main extends JFrame {
 		st += "\nShannon limit = "
 				+ twoDec(ChannelHelper.getHSCapacity(sat.transponderBandwidth,
 						SdBW, NdBW)) + " kbps\nBitrate = " + twoDec(rate)
-						+ " kbps, Information Rate = "
-						+ twoDec(ChannelHelper.getInfoRate(sta, sat)) + " kbps";
+				+ " kbps, Information Rate = "
+				+ twoDec(ChannelHelper.getInfoRate(sta, sat)) + " kbps";
 		st += "\nEb/n0 = " + twoDec(EbN0) + ", uncoded BER = "
 				+ ChannelHelper.getUncodedBER(sta, sat, rate)
 				+ ", coded BER = " + ber;
-		// st += "\nat 0.8C = "+twoDec(0.8*rate/1000d)+ " uncoded BER = "+
-		// ChannelHelper.getBER(sta, sat,0.8);
 
-		String FECString = "<html>Using BCH("
-				+ FEC.getFECParams(sat.FEC).n
-				+ ", "
-				+ FEC.getFECParams(sat.FEC).k
-				+ ")<br>R<sub>c</sub> = "
-				+ twoDec((double) FEC.getFECParams(sat.FEC).k
-						/ (double) FEC.getFECParams(sat.FEC).n) + "<br>t = "
-						+ FEC.getFECParams(sat.FEC).t + "</html>";
-		FEClabel.setText(FECString);
 		txtrDatamisc.setText(st);
 	}
 
@@ -896,16 +889,15 @@ public class Main extends JFrame {
 	private Satellite parseSatelliteParameters() {
 
 		double EIRP;
-		int orbType, modulation, transpBW;
+		int orbType, modulation, transpBW, fec;
 
 		EIRP = Double.parseDouble(txtEirptf.getText());
 		transpBW = Integer.parseInt(txtTranspbw.getText());
 		orbType = orbitComboBox.getSelectedIndex();
 		modulation = modulationComboBox.getSelectedIndex();
-		System.out.println("Main.parseSatelliteParameters() modulation "
-				+ Modulation.getHRname(modulation));
+		fec = fecComboBox.getSelectedIndex();
 
-		Satellite sat = new Satellite(EIRP, transpBW, orbType, modulation);
+		Satellite sat = new Satellite(EIRP, transpBW, orbType, modulation, fec);
 		return sat;
 	}
 
