@@ -21,9 +21,9 @@ public class Orbits {
 
 
 	/**
-	 * get the orbit_type attenuation. 
+	 * get the orbital distance. 
 	 * @param ORBIT_TYPE , one of Orbit.ORBIT_TYPE_LEO, Orbit.ORBIT_TYPE_MEO, Orbit.ORBIT_TYPE_GEO, Orbit.ORBIT_TYPE_HEO
-	 * @return the orbit type attenuation.
+	 * @return the orbital distance in [km].
 	 */
 	public static double getDistance(int ORBIT_TYPE){
 		switch (ORBIT_TYPE) {
@@ -70,6 +70,11 @@ public class Orbits {
 	}
 
 
+	/**
+	 * get the propagation time in [ms] for the given orbit
+	 * @param ORBIT_TYPE
+	 * @return the propagation time in [ms]
+	 */
 	public static int getDelay(int ORBIT_TYPE) {
 		switch (ORBIT_TYPE) {
 		case ORBIT_TYPE_LEO:
