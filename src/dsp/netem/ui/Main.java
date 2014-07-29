@@ -6,18 +6,18 @@
 		Copyright (C) 2014 Giulio Luzzati
 		giulio.luzzati@edu.unige.it
 
-    JSATEM is free software: you can redistribute it and/or modify
+    JSATSIM is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    JSATEM is distributed in the hope that it will be useful,
+    JSATSIM is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with JSATEM.  If not, see <http://www.gnu.org/licenses/>.
+    along with JSATSIM.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * 
  */
@@ -838,7 +838,7 @@ public class Main extends JFrame {
 		double ber = ChannelHelper.getBER(sta, sat, rate);
 		StringBuffer sb = netemController.setNetworkConditions("" + rate,
 				String.format("%e", ber * 100), 0 + "",
-				Orbits.getDelay(sat.ORBIT_TYPE) * 2 + "");
+				Orbits.getDelay(sat.ORBIT_TYPE) + "");
 
 		setMiscData(sat, sta, ChannelHelper.getRate(sta, sat), ber);
 		txtrNetemoutput.append("\n" + sb.toString());
